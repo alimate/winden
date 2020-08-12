@@ -14,7 +14,7 @@ public class ByteCounter implements Counter {
     public long count() {
         long sum = 0;
         for (byte flag : flags) {
-            sum += flag & 0b00000001;
+            sum += flag;
         }
 
         return sum;
