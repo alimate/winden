@@ -31,7 +31,7 @@ public class BooleanCounter implements Counter {
 
     public static BooleanCounter halfSetHalfClear(int length) {
         BooleanCounter counter = new BooleanCounter(length);
-        for (int i = 0; i < length / 2; i++) {
+        for (int i = 0; i < 3 * length / 4; i++) {
             counter.flags[i] = true;
         }
 
