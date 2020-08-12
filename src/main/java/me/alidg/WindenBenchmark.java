@@ -20,12 +20,14 @@ public class WindenBenchmark {
     private BooleanCounter randomBooleanCounter;
     private BooleanCounter sortedBooleanCounter;
     private ByteCounter bitwiseCounter;
+    private CompactCounter compactCounter;
 
     @Setup(Level.Trial)
     public void setup() {
         randomBooleanCounter = BooleanCounter.randomFlags(length);
         sortedBooleanCounter = BooleanCounter.halfSetHalfClear(length);
         bitwiseCounter = ByteCounter.randomFlags(length);
+        compactCounter = CompactCounter.randomCompactCounter(length);
     }
 
     @Benchmark
@@ -41,6 +43,11 @@ public class WindenBenchmark {
     @Benchmark
     public long bitwiseCounter() {
         return bitwiseCounter.count();
+    }
+
+    @Benchmark
+    public long compactCounter() {
+        return compactCounter.count();
     }
 
     public static void main(String[] args) throws Exception {
