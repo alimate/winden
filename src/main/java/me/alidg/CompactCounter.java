@@ -20,7 +20,7 @@ public class CompactCounter implements Counter {
         return sum;
     }
 
-    public static CompactCounter randomCompactCounter(int length) {
+    public static CompactCounter randomFlags(int length) {
         CompactCounter counter = new CompactCounter(length);
         for (int i = 0; i < length; i++) {
             int wordIndex = i / 64;

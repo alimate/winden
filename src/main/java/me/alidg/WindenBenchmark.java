@@ -25,9 +25,9 @@ public class WindenBenchmark {
     @Setup(Level.Trial)
     public void setup() {
         randomBooleanCounter = BooleanCounter.randomFlags(length);
-        sortedBooleanCounter = BooleanCounter.halfSetHalfClear(length);
+        sortedBooleanCounter = BooleanCounter.partitionedFlags(length);
         bitwiseCounter = ByteCounter.randomFlags(length);
-        compactCounter = CompactCounter.randomCompactCounter(length);
+        compactCounter = CompactCounter.randomFlags(length);
     }
 
     @Benchmark

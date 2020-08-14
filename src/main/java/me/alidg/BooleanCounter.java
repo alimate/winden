@@ -29,7 +29,7 @@ public class BooleanCounter implements Counter {
         return counter;
     }
 
-    public static BooleanCounter halfSetHalfClear(int length) {
+    public static BooleanCounter partitionedFlags(int length) {
         BooleanCounter counter = new BooleanCounter(length);
         for (int i = 0; i < 3 * length / 4; i++) {
             counter.flags[i] = true;
