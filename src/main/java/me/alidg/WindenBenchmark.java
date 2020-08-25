@@ -20,7 +20,6 @@ import static java.util.stream.Collectors.toList;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class WindenBenchmark {
 
     @Param("1")
