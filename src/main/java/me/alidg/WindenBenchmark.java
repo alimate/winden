@@ -43,6 +43,20 @@ public class WindenBenchmark {
         return shuffled.stream().filter(v -> v < length / 2).count();
     }
 
+    @Benchmark
+    public long sortedMove() {
+        return sorted.stream().mapToLong(v -> toggle(v - length / 2)).sum();
+    }
+
+    @Benchmark
+    public long shuffledMove() {
+        return shuffled.stream().mapToLong(v -> toggle(v - length / 2)).sum();
+    }
+
+    private long toggle(long x) {
+        return x >>> 63;
+    }
+
     public static void main(String[] args) throws Exception {
         Main.main(args);
     }
