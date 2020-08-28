@@ -27,21 +27,8 @@ public class WindenBenchmark {
     public void setup() {
         sorted = LongStream.range(0, length).toArray();
         shuffled = LongStream.range(0, length).toArray();
-        for (int i = 0; i < length; i++) {
-            int from = ThreadLocalRandom.current().nextInt(0, length);
-            int to = ThreadLocalRandom.current().nextInt(0, length);
-
-            long temp = shuffled[from];
-            shuffled[from] = shuffled[to];
-            shuffled[to] = temp;
-        }
-
-        int misplaced = 0;
-        for (int i = 0; i < length; i++) {
-            if (shuffled[i] != i) misplaced++;
-        }
-
-        System.out.println("Randomness: " + (float) misplaced * 100 / length);
+        shuffleNumbers();
+        printRandomness();
     }
 
     @Benchmark
@@ -65,8 +52,38 @@ public class WindenBenchmark {
         return Arrays.stream(shuffled).map(v -> toggle(v - length / 2)).sum();
     }
 
+    @Benchmark
+    public long sortedTernary() {
+        return Arrays.stream(sorted).map(v -> (v - length / 2) < 0 ? 1 : 0).sum();
+    }
+
+    @Benchmark
+    public long shuffledTernary() {
+        return Arrays.stream(shuffled).map(v -> (v - length / 2) < 0 ? 1 : 0).sum();
+    }
+
     private long toggle(long x) {
         return x >>> 63;
+    }
+
+    private void shuffleNumbers() {
+        for (int i = 0; i < 2 * length; i++) {
+            int from = ThreadLocalRandom.current().nextInt(0, length);
+            int to = ThreadLocalRandom.current().nextInt(0, length);
+
+            long temp = shuffled[from];
+            shuffled[from] = shuffled[to];
+            shuffled[to] = temp;
+        }
+    }
+
+    private void printRandomness() {
+        int misplaced = 0;
+        for (int i = 0; i < length; i++) {
+            if (shuffled[i] != i) misplaced++;
+        }
+
+        System.out.println("Randomness: " + (float) misplaced * 100 / length);
     }
 
     public static void main(String[] args) throws Exception {
