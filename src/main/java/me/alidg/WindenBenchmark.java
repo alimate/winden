@@ -9,11 +9,9 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.LongStream;
-
-import static java.util.stream.Collectors.toList;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
@@ -22,35 +20,49 @@ public class WindenBenchmark {
     @Param("1")
     int length;
 
-    private List<Long> sorted;
-    private List<Long> shuffled;
+    private long[] sorted;
+    private long[] shuffled;
 
     @Setup
     public void setup() {
-        sorted = LongStream.range(0, length).boxed().collect(toList());
+        sorted = LongStream.range(0, length).toArray();
+        shuffled = LongStream.range(0, length).toArray();
+        for (int i = 0; i < length; i++) {
+            int from = ThreadLocalRandom.current().nextInt(0, length);
+            int to = ThreadLocalRandom.current().nextInt(0, length);
 
-        shuffled = LongStream.range(0, length).boxed().collect(toList());
-        Collections.shuffle(shuffled);
+            long temp = shuffled[from];
+            shuffled[from] = shuffled[to];
+            shuffled[to] = temp;
+        }
+
+        int misplaced = 0;
+        for (int i = 0; i < length; i++) {
+            if (shuffled[i] != i) misplaced++;
+        }
+
+        System.out.println("Randomness: " + (float) misplaced * 100 / length);
     }
 
     @Benchmark
     public long sorted() {
-        return sorted.stream().filter(v -> v < length / 2).count();
+        return Arrays.stream(sorted).filter(v -> v < length / 2).count();
     }
 
     @Benchmark
     public long shuffled() {
-        return shuffled.stream().filter(v -> v < length / 2).count();
+        return Arrays.stream(shuffled).filter(v -> v < length / 2).count();
     }
 
     @Benchmark
     public long sortedMove() {
-        return sorted.stream().mapToLong(v -> toggle(v - length / 2)).sum();
+        return Arrays.stream(sorted).map(v -> toggle(v - length / 2)).sum();
     }
+
 
     @Benchmark
     public long shuffledMove() {
-        return shuffled.stream().mapToLong(v -> toggle(v - length / 2)).sum();
+        return Arrays.stream(shuffled).map(v -> toggle(v - length / 2)).sum();
     }
 
     private long toggle(long x) {
