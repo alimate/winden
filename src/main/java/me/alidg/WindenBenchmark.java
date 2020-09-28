@@ -37,15 +37,34 @@ public class WindenBenchmark {
     }
 
     @Benchmark
+    public long sortedFor() {
+        long count = 0;
+        for (long num : sorted) {
+            if (num < length / 2) count++;
+        }
+
+        return count;
+    }
+
+    @Benchmark
     public long shuffled() {
         return Arrays.stream(shuffled).filter(v -> v < length / 2).count();
+    }
+
+    @Benchmark
+    public long shuffledFor() {
+        long count = 0;
+        for (long num : shuffled) {
+            if (num < length / 2) count++;
+        }
+
+        return count;
     }
 
     @Benchmark
     public long sortedMove() {
         return Arrays.stream(sorted).map(v -> toggle(v - length / 2)).sum();
     }
-
 
     @Benchmark
     public long shuffledMove() {
