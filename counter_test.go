@@ -5,35 +5,28 @@ import (
 	"testing"
 )
 
-const length = 1000000
+const length = 10000
 
-var sorted = make([]int, length)
-var shuffled = rand.Perm(length)
-
-func init() {
-	for i := 0; i < length; i++ {
-		sorted[i] = i
-	}
-}
+var sorted = &Counter{numbers: sortedSlice(length)}
+var shuffled = &Counter{numbers: rand.Perm(length)}
 
 func BenchmarkSortedArray(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		sum := 0
-		for _, v := range sorted {
-			if v < length/2 {
-				sum++
-			}
-		}
+		sorted.Count()
 	}
 }
 
 func BenchmarkShuffledArray(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		sum := 0
-		for _, v := range shuffled {
-			if v < length/2 {
-				sum++
-			}
-		}
+		shuffled.Count()
 	}
+}
+
+func sortedSlice(length int) []int {
+	v := make([]int, length)
+	for i := 0; i < length; i++ {
+		v[i] = i
+	}
+
+	return v
 }
